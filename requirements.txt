@@ -1,5 +1,11 @@
+# Django Web packages
 django
 djangorestframework
+markdown
+django-filter
+django-cors-headers
+
+# AI packages
 llama-index
 pypdf
 python-dotenv
