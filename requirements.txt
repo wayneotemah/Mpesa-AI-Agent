@@ -1,3 +1,6 @@
+django
+djangorestframework
 llama-index
 pypdf
 python-dotenv
+django_daraja

@@ -1,1 +1,12 @@
 .venv
+.env
+migrations
+db.sqlite3
+__pycache__
+
+
+
+# Byte-compiled / optimized / DLL files
+*.pyc
+*.pyo
+*.pyd
