@@ -4,9 +4,11 @@ djangorestframework
 markdown
 django-filter
 django-cors-headers
+django_daraja
+python-dotenv
 
 # AI packages
 llama-index
 pypdf
-python-dotenv
-django_daraja
+llama-index-llms-groq
+tensorflow
