@@ -39,8 +39,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_daraja',
     'corsheaders',
-    #my apps
-    # 'payments',
+    #####my apps#######
+    'Payments',
+    'Commerce',
     
 ]
 
@@ -141,6 +142,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #Mpesa Credentials
 # https://django-daraja.readthedocs.io/en/latest/pages/quick_start.html#install
-MPESA_ENVIRONMENT = os.environ.get('MPESA_ENVIRONMENT')
-MPESA_CONSUMER_KEY = os.environ.get('MPESA_CONSUMER_KEY')
-MPESA_CONSUMER_SECRET = os.environ.get('MPESA_CONSUMER_SECRET')
+# MPESA_ENVIRONMENT = os.environ.get('MPESA_ENVIRONMENT')
+# MPESA_CONSUMER_KEY = os.environ.get('MPESA_CONSUMER_KEY')
+# MPESA_CONSUMER_SECRET = os.environ.get('MPESA_CONSUMER_SECRET')
+# MPESA_PASSKEY = os.environ.get('MPESA_PASSKEY')
+# MPESA_SHORTCODE = os.environ.get('MPESA_EXPRESS_SHORTCODE',"")
+
+MPESA_CONFIG = {
+    "CONSUMER_KEY": os.environ.get("MPESA_CONSUMER_KEY", default=""),
+    "CONSUMER_SECRET": os.environ.get("MPESA_CONSUMER_SECRET", default=""),
+    "HOST_NAME": os.environ.get("HOST_NAME", default=""),
+    "PASS_KEY": os.environ.get("MPESA_PASSKEY", default=""),
+    "SAFARICOM_API": "https://sandbox.safaricom.co.ke",
+    "SHORT_CODE": os.environ.get("MPESA_SHORTCODE", default=""),
+}
