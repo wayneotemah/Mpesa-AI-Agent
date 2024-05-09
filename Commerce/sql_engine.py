@@ -4,11 +4,6 @@ from sqlalchemy import create_engine
 from llama_index.llms.groq import Groq
 from llama_index.core.tools import QueryEngineTool
 
-from llama_index.core.query_engine import SQLJoinQueryEngine
-from llama_index.core.tools import ToolMetadata
-from llama_index.core.query_engine import SubQuestionQueryEngine
-
-from django.conf import settings
 from dotenv import load_dotenv
 import os
 
@@ -17,9 +12,9 @@ load_dotenv()
 path_to_db = "/root/Projects/Mpesa-Agent/db.sqlite3"
 engine = create_engine(f"sqlite:///{path_to_db}", future=True)
 
-tables = ["product", "order"]
+tables = ["product"]
 
-sql_database = SQLDatabase(engine)
+sql_database = SQLDatabase(engine,_include_tables=tables)
 
 llm = Groq(model="llama3-70b-8192", api_key=os.getenv("GROQ_API_KEY"))
 
@@ -29,6 +24,11 @@ sql_query_engine = NLSQLTableQueryEngine(
     llm = llm
 )
 
-query_str = "Find products with price > 100"
-print(sql_query_engine.query(query_str))
-
+sql_tool = QueryEngineTool.from_defaults(
+    query_engine=sql_query_engine,
+    description=(
+        "Useful for translating a natural language query into a SQL query over"
+        " a table containing: product, containg a list of products offered by"
+        " our e-commerce platform."
+    ),
+)

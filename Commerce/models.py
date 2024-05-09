@@ -1,13 +1,16 @@
 from django.db import models
 
-
-# Create your models here.
-
 class Product(models.Model):
+    choices = [('Electronics','Electronics'),
+               ('Fashion','Fashion'),
+               ('Home','Home'),
+               ('Beauty','Beauty'),
+               ('Toys','Toys')]
     name = models.CharField(max_length=100)
     price = models.FloatField()
     description = models.TextField()
     image = models.ImageField(upload_to='products')
+    catrgory = models.CharField(max_length=100,choices= choices)
 
     def __str__(self):
         return self.name
