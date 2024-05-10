@@ -7,6 +7,9 @@ django-cors-headers
 django_daraja
 python-dotenv
 
+# Twilo package
+twilio
+
 # AI packages
 llama-index
 pypdf
