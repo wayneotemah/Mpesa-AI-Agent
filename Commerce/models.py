@@ -1,4 +1,16 @@
 from django.db import models
+from twilio.rest import Client
+from django.db.models import Q
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+
+
+client = Client(os.getenv("TWILIO_ACCOUNT_SID"),os.getenv("TWILIO_AUTH_TOKEN"))
+
+
 
 class Product(models.Model):
     choices = [('Electronics','Electronics'),
@@ -10,7 +22,7 @@ class Product(models.Model):
     price = models.FloatField()
     description = models.TextField()
     image = models.ImageField(upload_to='products')
-    catrgory = models.CharField(max_length=100,choices= choices)
+    category = models.CharField(max_length=100,choices= choices)
 
     def __str__(self):
         return self.name
@@ -19,6 +31,54 @@ class Product(models.Model):
     def get_all_products():
         return Product.objects.all()
     
+    @staticmethod
+    def get_product_picture(product_id):
+        product = Product.objects.get(id=product_id)
+        print(product.image.url)
+        return product.image.url
+    
+    @staticmethod
+    def get_product(product_name):
+        # This method now searches across multiple fields and orders by date_created
+        products = Product.objects.filter(
+            Q(id__icontains=product_name) |  
+            Q(name__icontains=product_name) |
+            Q(price__icontains=product_name) |
+            Q(description__icontains=product_name) |
+            Q(category__icontains=product_name)
+        ).order_by('-date_created')
+        
+        return products.first() if products else None
+    
+    @staticmethod
+    def send_product_picture_with_whatsAPP(product_name:str, phone_number:str):
+        """Summary
+           send a picture of a product to a user's whatsapp number
+
+        Args:
+            product_name (int): the product name
+            phone_number (str): whatsApp number to sent to
+
+        Returns:
+            dict
+        """
+        try:
+            product_id = Product.get_product(product_name).id
+            print(product_id)
+            image_url = Product.get_product_picture(product_id)
+            print(image_url)
+            media_url=os.environ.get("NGROK_URL")+image_url
+            print(media_url)
+            message = client.messages.create(body=f'Here is the image of {product_name}!\n{media_url}',
+                        media_url=media_url,
+                        from_=os.getenv("TWILIO_PHONE_NUMBER"),
+                        to=f"whatsapp:{phone_number}")
+            
+            return "sent"
+        
+        except Exception as e:
+            return str(e)
+        
     
 class Order(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

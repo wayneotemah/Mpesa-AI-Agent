@@ -19,16 +19,23 @@ def rag_agent(request):
         # view inteeface for a rag agent that uses the SQL query engine
         from_number = request.POST.get('From')
         
-        prompt = request.POST.get('Body').lower()
+        #remove the "whatsapp:" from the string, by spiliting by : then take the second part
+        user_number = from_number.rsplit(":")[1]
+        
+        prompt = request.POST.get('Body')
+        prompt = prompt + f"\nmy phone number is {user_number}"
+        
+        print(prompt)
         
         response = agent.query(prompt)
         client.messages.create(
             body=response,
             from_=os.getenv("TWILIO_PHONE_NUMBER"),
-            to=f"whatsapp:{from_number}"
+            to=f"{from_number}"
         )
-        return HttpResponse("Reminder sent")  
+        return HttpResponse("message sent")  
     except Exception as e:
+        print(e)
         return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
     
     

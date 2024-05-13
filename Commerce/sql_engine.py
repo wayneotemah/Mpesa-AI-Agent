@@ -25,12 +25,3 @@ sql_query_engine = NLSQLTableQueryEngine(
     llm = llm
 )
 
-sql_engine = QueryEngineTool.from_defaults(
-    query_engine=sql_query_engine,
-    description=(
-        "Useful for translating a natural language query into a SQL query over"
-        " a table containing: product, containg a list of products offered by"
-        " our e-commerce platform."
-    ),
-)
-

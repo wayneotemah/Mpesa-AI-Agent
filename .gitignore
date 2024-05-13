@@ -4,6 +4,7 @@ migrations
 db.sqlite3
 __pycache__
 company_index
+media
 
 
 
