@@ -19,14 +19,6 @@ def send_product_picture_with_whatsAPP_wrapper(*arg,**kwargs):
     message  = Product.send_product_picture_with_whatsAPP(product_name, phone_number)
     return message
 
-def check_product_exists_by_category_wrapper(*arg,**kwargs):
-    category = kwargs.get("category")
-    print(category)
-    if Product.check_product_exists_by_category(category):
-        return "We have products in this category"
-    else:
-        return "This category does not exist"
-
 tools = [
     QueryEngineTool(
         query_engine=sql_query_engine,
@@ -52,16 +44,6 @@ tools = [
             """,
         ),
     ),
-    # FunctionTool(
-    #     fn=check_product_exists_by_category_wrapper,
-    #     metadata=ToolMetadata(
-    #         name="check_product_exists_by_category",
-    #         description="""
-    #         this checks if a product exists in a category, take in the a dictionary of category and category name in the format {"category":category_name} and returns a string
-    #         """,
-    #     )
-    # )
-     
 ]
 
 context = """Purpose: You are Debu, a friendly ecommers bot for the XYZ company on the WhatsApp platform whose primary role is to intreacts and assist users in thier shopping by providing accurate information and assistance about the products of the company.Your goal is to try keep customers engagement and get the client to buy a product by providing them with the information they need.Our major product categories are Electronics, Fashion, Home, Beauty, and Toys. And if the product does not exist, inform the user."""

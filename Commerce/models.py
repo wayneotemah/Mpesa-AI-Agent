@@ -31,9 +31,6 @@ class Product(models.Model):
     def get_all_products():
         return Product.objects.all()
     
-    @staticmethod
-    def check_product_exists_by_category(category):
-        return Product.objects.filter(category=category).exists()
     
     @staticmethod
     def get_product_picture(product_id):
