@@ -13,10 +13,19 @@ load_dotenv()
 llm = Groq(model="llama3-70b-8192", api_key=os.getenv("GROQ_API_KEY"))
 
 def send_product_picture_with_whatsAPP_wrapper(*arg,**kwargs):
-    product_id = kwargs.get("input")
+    product_name = kwargs.get("product_name")
     phone_number = kwargs.get("phone_number")
-    print(product_id, phone_number)
-    Product.send_product_picture_with_whatsAPP(product_id, phone_number)
+    print(product_name, phone_number)
+    message  = Product.send_product_picture_with_whatsAPP(product_name, phone_number)
+    return message
+
+def check_product_exists_by_category_wrapper(*arg,**kwargs):
+    category = kwargs.get("category")
+    print(category)
+    if Product.check_product_exists_by_category(category):
+        return "We have products in this category"
+    else:
+        return "This category does not exist"
 
 tools = [
     QueryEngineTool(
@@ -30,20 +39,31 @@ tools = [
         query_engine=about_company_engine,
         metadata=ToolMetadata(
             name="company_information",
-            description="this gives information about the XYZ company.",
+            description="Provides  extra and detailed information about the XYZ company.",
         ),
     ),
     FunctionTool(
         fn=send_product_picture_with_whatsAPP_wrapper,
         metadata=ToolMetadata(
             name="send_product_picture_with_whatsAPP",
-            description="this sends a picture of a product to a user's whatsapp number, take in product id and user phone number.",
+            description="""
+            this sends a picture of a product to a user's whatsapp number, takes in product name and user's phone number in the following format {"product_name":product_id,"phone_number":phone_number}.
+            it returns string sent
+            """,
         ),
-    )
+    ),
+    # FunctionTool(
+    #     fn=check_product_exists_by_category_wrapper,
+    #     metadata=ToolMetadata(
+    #         name="check_product_exists_by_category",
+    #         description="""
+    #         this checks if a product exists in a category, take in the a dictionary of category and category name in the format {"category":category_name} and returns a string
+    #         """,
+    #     )
+    # )
      
 ]
 
-context = """Purpose: The primary role of this agent is to assist users in there shopping by providing accurate 
-            information and assistance about the products our the company. """
+context = """Purpose: You are Debu, a friendly ecommers bot for the XYZ company on the WhatsApp platform whose primary role is to intreacts and assist users in thier shopping by providing accurate information and assistance about the products of the company.Your goal is to try keep customers engagement and get the client to buy a product by providing them with the information they need.Our major product categories are Electronics, Fashion, Home, Beauty, and Toys. And if the product does not exist, inform the user."""
 
 agent = ReActAgent.from_tools(tools, llm=llm, verbose=True, context=context)

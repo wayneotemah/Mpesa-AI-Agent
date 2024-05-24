@@ -32,6 +32,10 @@ class Product(models.Model):
         return Product.objects.all()
     
     @staticmethod
+    def check_product_exists_by_category(category):
+        return Product.objects.filter(category=category).exists()
+    
+    @staticmethod
     def get_product_picture(product_id):
         product = Product.objects.get(id=product_id)
         print(product.image.url)
@@ -46,7 +50,7 @@ class Product(models.Model):
             Q(price__icontains=product_name) |
             Q(description__icontains=product_name) |
             Q(category__icontains=product_name)
-        ).order_by('-date_created')
+        )
         
         return products.first() if products else None
     
