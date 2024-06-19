@@ -70,7 +70,7 @@ class Product(models.Model):
             print(image_url)
             media_url=os.environ.get("NGROK_URL")+image_url
             print(media_url)
-            message = client.messages.create(body=f'Here is the image of {product_name}!\n{media_url}',
+            message = client.messages.create(body=f'Here is an image of {product_name}!\n{media_url}',
                         media_url=media_url,
                         from_=os.getenv("TWILIO_PHONE_NUMBER"),
                         to=f"whatsapp:{phone_number}")
